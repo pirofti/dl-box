@@ -48,7 +48,7 @@ function [Dout, Xout, err, errextra, shared] = ...
 %   Xout -- the corresponding sparse representations
 %   err -- the RMSE at each iteration
 %   errextra -- the custom error calculated at each iter (see erropts)
-    
+
     p = inputParser;
     
     p.addOptional('upfunc', @ksvd);
@@ -63,7 +63,7 @@ function [Dout, Xout, err, errextra, shared] = ...
     p.addParameter('outopts', 'best', @(x) true);
     p.addParameter('data_mask', []);  % !!! BD
     p.addParameter('shared', {}, @(x) iscell(x));
-
+    
     p.parse(varargin{:});
     res = p.Results;
     shared = res.shared;
@@ -85,6 +85,9 @@ function [Dout, Xout, err, errextra, shared] = ...
     for iter = 1:iternum
         if strcmp(func2str(res.spfunc), 'NOP') == 0
             [X, shared] = res.spfunc(Y, D, s, shared, res.spopts{:});
+        end
+        if strcmp(func2str(res.upfunc), 'sedil') == 1
+            iter = iternum; % let sedil do all the work in a single call
         end
         [D, X, shared] = res.upfunc(Y, D, X, iter, ...
             res.replatoms, shared, res.upopts{:});
