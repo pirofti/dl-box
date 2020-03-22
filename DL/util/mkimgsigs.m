@@ -52,8 +52,8 @@ function [Y , Irows, Icols, sigs, zcols, Ymean, Ynorm] = ...
         Y = Y - repmat(Ymean, p, 1);    % 0-mean
     end
     if normalize
-        Ynorm = norm(Y);
-        Y = Y / norm(Y);                % l2 normalized
+        Ynorm = vecnorm(Y);
+        Y = normc(Y);
     end
     %Y = Y./255;
 	sigs = size(Y,2);

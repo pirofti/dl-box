@@ -1,10 +1,11 @@
 % Copyright (c) 2018 Bogdan Dumitrescu <bogdan.dumitrescu@acse.pub.ro>
 % Copyright (c) 2018 Paul Irofti <paul@irofti.net>
-% 
+% Copyright (c) 2019 Andra Băltoiu <andra.baltoiu@fmi.unibuc.ro>
+%
 % Permission to use, copy, modify, and/or distribute this software for any
 % purpose with or without fee is hereby granted, provided that the above
 % copyright notice and this permission notice appear in all copies.
-% 
+%
 % THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 % WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 % MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
@@ -25,6 +26,7 @@ function [W, D, A] = clas_labelcon_dl(Y, H, Q, n, s, alpha, beta, init_method)
 %   beta        - trade-off parameters in the objective
 %   init_method - 0, random
 %                 1, trained dictionaries for each class and LS classifier and A
+%                 2, same as 1) but with an extra inter-class shared dictionary
 % Output:
 %   W           - classifier matrix
 %   D           - dictionary for sparse representation
@@ -33,7 +35,7 @@ function [W, D, A] = clas_labelcon_dl(Y, H, Q, n, s, alpha, beta, init_method)
 % BD 22.04.2018
 
 if nargin < 8
-  init_method = 0;
+    init_method = 0;
 end
 
 Ye = [Y; sqrt(alpha)*H; sqrt(beta)*Q];    % extended signal matrix
@@ -46,33 +48,64 @@ m = size(Y,1);              % signal length
 c = size(H,1);              % number of classes
 me = m+c+n;
 
+
 % Label consistent DL
 switch init_method
-  case 0                    % plain initialization
-    D0 = randn(me,n);
-    D0 = normc(D0);
-  case 1                    % train small dictionaries for each class
-    D0 = zeros(me,n);
-    jj = 0;
-    for i = 1 : c           % train the dictionaries
-      jc = find(H(i,:)==1); % indices of signals from class i
-      Yc = Y(:, jc);        % those signals
-      nc = sum(Q(:,jc(1))); % number of atoms for class i
-      %D0c = randn(m,nc);
-      D0c = Yc(:,1:nc);
-      D0c = normc(D0c);
-      Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatom', replatom);
-      D0(1:m,jj+1:jj+nc) = Dc;
-      jj = jj + nc;
-    end
-    X = omp(Y, D0(1:m,:), s);
-    % compute initial classifier and label consistency transformation
-    gamma = 1e-3;
-    W = H*X' / (X*X' + gamma*eye(n));
-    A = Q*X' / (X*X' + gamma*eye(n));
-    D0(m+1:m+c,:) = sqrt(alpha) * W;
-    D0(m+c+1:me,:) = sqrt(beta) * A;
-    D0 = normc(D0);
+    case 0                    % plain initialization
+        D0 = randn(me,n);
+        D0 = normc(D0);
+    case 1                    % train small dictionaries for each class
+        D0 = zeros(me,n);
+        jj = 0;
+        for i = 1 : c           % train the dictionaries
+            jc = find(H(i,:)==1); % indices of signals from class i
+            Yc = Y(:, jc);        % those signals
+            nc = sum(Q(:,jc(1))); % number of atoms for class i
+            %D0c = randn(m,nc);
+            D0c = Yc(:,1:nc);
+            D0c = normc(D0c);
+            Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatom', replatom);
+            D0(1:m,jj+1:jj+nc) = Dc;
+            jj = jj + nc;
+        end
+        X = omp(Y, D0(1:m,:), s);
+        % compute initial classifier and label consistency transformation
+        gamma = 1e-3;
+        W = H*X' / (X*X' + gamma*eye(n));
+        A = Q*X' / (X*X' + gamma*eye(n));
+        D0(m+1:m+c,:) = sqrt(alpha) * W;
+        D0(m+c+1:me,:) = sqrt(beta) * A;
+        D0 = normc(D0);
+    case 2
+        ns = sum(all(Q,2));     % number of atoms of shared dictionary
+        D0 = zeros(me,n);
+        jj = 0;
+        for i = 1 : c           % train the dictionaries
+            jc = find(H(i,:)==1);       % indices of signals from class i
+            Yc = Y(:, jc);              % those signals
+            nc = sum(Q(:,jc(1))) - ns;  % number of atoms for class i
+            %D0c = randn(m,nc);
+            D0c = Yc(:,1:nc);
+            D0c = normc(D0c);
+            Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatom', replatom);
+            D0(1:m,jj+1:jj+nc) = Dc;
+            jj = jj + nc;
+        end
+        % train the shared dictionary
+        Ys = datasample(Y, ns, 2, 'Replace',false);
+        D0s = normc(Ys);
+        %D0s = randn(m,ns);
+        Ds = DL(Y, D0s, s, iterc, str2func(update), params, 'replatom', replatom);
+        D0(1:m,jj+1:n) = Ds;
+        
+        X = omp(Y, D0(1:m,:), s);
+        % compute initial classifier and label consistency transformation
+        gamma = 1e-3;
+        W = H*X' / (X*X' + gamma*eye(n));
+        A = Q*X' / (X*X' + gamma*eye(n));
+        D0(m+1:m+c,:) = sqrt(alpha) * W;
+        D0(m+c+1:me,:) = sqrt(beta) * A;
+        D0 = normc(D0);
 end
 
 De = DL(Ye, D0, s, iters, str2func(update), params, 'replatom', replatom);

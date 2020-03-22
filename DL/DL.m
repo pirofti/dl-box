@@ -78,7 +78,11 @@ function [Dout, Xout, err, errextra, shared] = ...
 
     bestrmse = Inf;
     err = zeros(1,iternum);
-    errextra = zeros(1,iternum);
+    if ~isempty(res.erropts) && strcmp(res.erropts{1}, 'alliters')
+        errextra = cell(iternum, 1);
+    else
+        errextra = zeros(1,iternum);
+    end
     
     [Y, D, X] = DL_init(Y, D, s, iternum, res.initopts);
 
@@ -96,8 +100,13 @@ function [Dout, Xout, err, errextra, shared] = ...
             [D,X] = DL_extra(Y, D, X, iter, iternum, ...
                 res.postopts, res.postoptsargs{:});
         end
-        [err(iter), errextra(iter)] = ...
-            DL_error(Y, D, X, iter, shared, res.erropts{:});
+        if iscell(errextra)
+            [err(iter), errextra{iter}] = ...
+                DL_error(Y, D, X, iter, shared, res.erropts{:});
+        else
+            [err(iter), errextra(iter)] = ...
+                DL_error(Y, D, X, iter, shared, res.erropts{:});
+        end
         
         % Store the best dictionary
         switch res.outopts
@@ -127,7 +136,9 @@ function [Y, D, X] = DL_init(Y, D, s, iternum, initopts)
         N = size(Y,2);
         p1 = size(D{1},1);
         p2 = size(D{2},2);
-        Y = reshape(Y,p1,p2,N);
+        if ndims(Y) ~= 3
+            Y = reshape(Y,p1,p2,N);
+        end
     end
 end
 
@@ -245,6 +256,8 @@ function [rmse, errextra] = DL_error(Y, D, X, iter, shared, varargin)
             errextra = mean(sum(X ~= 0, 1));
         case 'recov'
             errextra = recovered_atoms(D, Dtrue);
+        case 'alliters'
+            errextra = D;
         otherwise
             errextra = 0;
     end
