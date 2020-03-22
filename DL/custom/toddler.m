@@ -15,11 +15,11 @@
 % OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 % Cite as:
-% P. Irofti and A. Băltoiu, Malware Identification with Dictionary Learning,
+% P. Irofti and A. B�?ltoiu, Malware Identification with Dictionary Learning,
 % in 27th European Signal Processing Conference (Eusipco), 
 % 2019 IEEE International Conference on, 2019, pp. 1--5.
 
-function estimate = toddler(Y, D, W, A, varargin)
+function [estimate, D, W, A, X] = toddler(Y, D, W, A, varargin)
 
 % INPUTS:
 %   Y                       signals, (m x N) matrix
@@ -96,6 +96,7 @@ Nl = length(PARAMS.Labels);         % number of labeled samples
 % TODDLER
 
 G = eye(n);
+X = [];
 for i = 1:N
     y = Y(:,i);
     x = omp(y,D,PARAMS.Sparsity);            % sparse representation
@@ -157,6 +158,8 @@ for i = 1:N
             W = (h*x' + lambda*W)/(x*x' + lambda*eye(nr));
             A = (q*x' + mu*A)/(x*x' + mu*eye(nr));
     end
-    
+    if nargout > 3
+        X = [X x]; % save for analysis
+    end
     estimate(i) = I(1);
 end
