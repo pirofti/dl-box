@@ -42,7 +42,7 @@ Ye = [Y; sqrt(alpha)*H; sqrt(beta)*Q];    % extended signal matrix
 iters = 50;                 % number of iterations in DL algorithm
 iterc = 20;                 % number of iterations for training initial dictionaries
 update = 'aksvd';           % dictionary update method
-replatom = 'random';        % atom replacement strategy
+replatoms = 'random';       % atom replacement strategy
 params = {};
 m = size(Y,1);              % signal length
 c = size(H,1);              % number of classes
@@ -64,7 +64,7 @@ switch init_method
             %D0c = randn(m,nc);
             D0c = Yc(:,1:nc);
             D0c = normc(D0c);
-            Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatom', replatom);
+            Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatoms', replatoms);
             D0(1:m,jj+1:jj+nc) = Dc;
             jj = jj + nc;
         end
@@ -87,7 +87,7 @@ switch init_method
             %D0c = randn(m,nc);
             D0c = Yc(:,1:nc);
             D0c = normc(D0c);
-            Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatom', replatom);
+            Dc = DL(Yc, D0c, s, iterc, str2func(update), params, 'replatoms', replatoms);
             D0(1:m,jj+1:jj+nc) = Dc;
             jj = jj + nc;
         end
@@ -95,7 +95,7 @@ switch init_method
         Ys = datasample(Y, ns, 2, 'Replace',false);
         D0s = normc(Ys);
         %D0s = randn(m,ns);
-        Ds = DL(Y, D0s, s, iterc, str2func(update), params, 'replatom', replatom);
+        Ds = DL(Y, D0s, s, iterc, str2func(update), params, 'replatoms', replatoms);
         D0(1:m,jj+1:n) = Ds;
         
         X = omp(Y, D0(1:m,:), s);
@@ -108,7 +108,7 @@ switch init_method
         D0 = normc(D0);
 end
 
-De = DL(Ye, D0, s, iters, str2func(update), params, 'replatom', replatom);
+De = DL(Ye, D0, s, iters, str2func(update), params, 'replatoms', replatoms);
 
 % Extract dictionary, classifier matrix and label consistency transformation
 D = De(1:m,:);

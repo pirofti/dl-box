@@ -24,7 +24,7 @@ iters = 50;     % DL iterations
 Ninit = 5;      % number of different initializations
 
 update = 'aksvd';    % dictionary update method
-replatom = 'random'; % atom replacement strategy
+replatoms = 'random'; % atom replacement strategy
 
 type = 'distinct';   % 'distinct' or 'sliding' patches
 imdir = 'img\';      % image directory
@@ -38,12 +38,12 @@ images = {'barbara.png', 'boat.png', 'house.png', 'lena.png', 'peppers.png'};
 params = {};
 for i = 1 : Ninit
   D0 = normc(randn(m,n));   % random vectors
-  [D, X, errsr{i}] = DL(Y, D0, s, iters, str2func(update), params, 'replatom', replatom);
+  [D, X, errsr{i}] = DL(Y, D0, s, iters, str2func(update), params, 'replatoms', replatoms);
 end
 
 for i = 1 : Ninit
   D0 = normc(Y(:, randperm(N,n)));  % random signals
-  [D, X, errss{i}] = DL(Y, D0, s, iters, str2func(update), params, 'replatom', replatom);
+  [D, X, errss{i}] = DL(Y, D0, s, iters, str2func(update), params, 'replatoms', replatoms);
 end
 
 % Plot error evolution

@@ -32,7 +32,7 @@ laolstime = '20170925144730'; % laols timestamp (from run_laols)
 updates = {'MOD', 'sgk', 'ksvd', 'aksvd', 'nsgk', 'paksvd', 'pnsgk'};
 laolsupdates = {'aksvd', 'nsgk', 'pnsgk'};
 % Unused atoms replacement strategy
-replatom = 'random';
+replatoms = 'random';
 
 % Interesting data
 ompmethods = length(updates);

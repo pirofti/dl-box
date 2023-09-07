@@ -21,7 +21,7 @@ s = 6;                  % sparsity
 N = 40000;              % total number of patches
 n = 256;                % dictionary size
 iters = 50;             % DL iterations
-replatom = 'worst';    % replace unused atoms
+replatoms = 'worst';    % replace unused atoms
 stds = [5 10 20 30 50]; % noise standard deviation
 ots = '20171017180427'; % data timestamp, copy from the filename
 %%-------------------------------------------------------------------------

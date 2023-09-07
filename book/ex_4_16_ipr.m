@@ -23,7 +23,7 @@ iters = 100;    % DL iterations
 snr = 20;       % signal-to-noise ratio in dB
 
 update = 'aksvd';    % dictionary update method
-replatom = 'random';     % atom replacement strategy
+replatoms = 'random';       % atom replacement strategy
 
 imgdata = 0;                % test with images?
 type = 'sliding';           % allow overlapping patches
@@ -47,7 +47,7 @@ errs = {};
 % IPR with AK-SVD
 [Dcoh{1}, X, errs{1}, criteria] = ...
       DL(Y, D, s, iters, str2func(update), params, ...
-         'replatom', replatom, 'postopts', 'ipr', 'postoptsargs', {'mutual_coh_ipr', 0.2, 'nit_ipr', 5});
+         'replatoms', replatoms, 'postopts', 'ipr', 'postoptsargs', {'mutual_coh_ipr', 0.2, 'nit_ipr', 5});
 
 % IPR with AK-SVDc, gamma = 1;
 update = 'aksvd_coh';
@@ -55,7 +55,7 @@ erropts = {'coherr', 'coh', 1};
 
 [Dcoh{2}, X, errs{2}, criteria] = ...
       DL(Y, D, s, iters, str2func(update), params, ...
-         'replatom', replatom, 'erropts', erropts, 'postopts', 'ipr', 'postoptsargs', {'mutual_coh_ipr', 0.2, 'nit_ipr', 5});
+         'replatoms', replatoms, 'erropts', erropts, 'postopts', 'ipr', 'postoptsargs', {'mutual_coh_ipr', 0.2, 'nit_ipr', 5});
 
 % Plot inner atom products in absolute value
 linewid = 2;

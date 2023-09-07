@@ -26,18 +26,18 @@ function [D,X,shared] = MOD(Y, D, X, ~, ~, shared, varargin)
     % Use sparse pattern from OMP to compute new sparse representations
     X = ompreg(Y,D,X,0);
 	
-	% I use SVD here to avoid the singularity issues that I encountered 
-	% when plainly solving the system
-	%[U, S, V] = svd(X',0);
-    [U, S, V] = svds(X',min(size(X')));
-	for k = 1:size(D,2)
-		if S(k,k) < 1e-8
-			S(k,k) = 0;
-		else
-			S(k,k) = 1/S(k,k);
-		end
-	end
-	D = V*S*U'*Y';
-	D = D';
+    % I use SVD here to avoid the singularity issues that I encountered 
+    % when plainly solving the system
+    [U, S, V] = svd(X',0);
+    % [U, S, V] = svds(X',min(size(X')));
+    for k = 1:size(D,2)
+	    if S(k,k) < 1e-8
+		    S(k,k) = 0;
+	    else
+		    S(k,k) = 1/S(k,k);
+	    end
+    end
+    D = V*S*U'*Y';
+    D = D';
     D = normc(D);
 end

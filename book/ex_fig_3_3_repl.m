@@ -54,10 +54,10 @@ allerrs = zeros(length(nn), length(repl), rounds, K);
 for i = 1:length(nn)
     n = nn(i);
     for j = 1:length(repl)
-        replatom = repl{j};
+        replatoms = repl{j};
         %% Read data
         matfile = sprintf('%s%s-m%d-n%d-N%d-s%d-K%d-%s-%s.mat', ...
-             datadir, dataprefix, m, n, N, s, K, replatom, ots);    
+             datadir, dataprefix, m, n, N, s, K, replatoms, ots);    
         load(matfile,'errs');
         Ynorm = cellfun(@(x) norm(x,'fro'), Y);
         allerrs(i,j,:,:) = squeeze(errs)./repmat(Ynorm,1,K);

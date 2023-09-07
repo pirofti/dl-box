@@ -54,17 +54,17 @@ fprintf('Dictionary selection coh.: %f\n', max(max(D'*D-eye(n))) )
 
 % AK-SVD
 update = 'aksvd';        % dictionary update method
-replatom = 'random';     % atom replacement strategy
+replatoms = 'random';     % atom replacement strategy
 params = {};
 D0 = normc(randn(m,n));
 
-[Dak, Xak, errs] = DL(Y, D0, s, iters, str2func(update), params, 'replatom', replatom);
+[Dak, Xak, errs] = DL(Y, D0, s, iters, str2func(update), params, 'replatoms', replatoms);
 fprintf('AK-SVD RMSE: %f\n', norm(Y-Dak*Xak,'fro')/sqrt(m*N) )
 fprintf('AK-SVD coh.: %f\n', max(max(Dak'*Dak-eye(n))) )
 
 % AK-SVD with IPR
 [Dcoh, Xcoh, errs] = DL(Y, D0, s, iters, str2func(update), params, ...
-         'replatom', replatom, 'postopts', 'ipr', 'postoptsargs', {'mutual_coh_ipr', 0.4, 'nit_ipr', 5});
+         'replatoms', replatoms, 'postopts', 'ipr', 'postoptsargs', {'mutual_coh_ipr', 0.4, 'nit_ipr', 5});
 fprintf('AK-SVD+IPR RMSE: %f\n', norm(Y-Dcoh*Xcoh,'fro')/sqrt(m*N))
 fprintf('AK-SVD+IPR coh.: %f\n', max(max(Dcoh'*Dcoh-eye(n))) )
 

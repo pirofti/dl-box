@@ -24,7 +24,7 @@ iters = 50;     % DL iterations
 snr = 20;       % signal-to-noise ratio in dB
 
 update = 'aksvd';      % dictionary update method
-replatom = 'random';   % atom replacement strategy
+replatoms = 'random';  % atom replacement strategy
 
 type = 'sliding';      % allow overlapping patches
 imdir = [pwd '\img\']; % image directory
@@ -41,7 +41,7 @@ for i = 1 : length(nv)
   for j = 1 : length(sv)
     n = nv(i)
     s = sv(j)
-    [D, X, errs] = DL(Y, D0(:,1:n), s, iters, str2func(update), params, 'replatom', replatom);
+    [D, X, errs] = DL(Y, D0(:,1:n), s, iters, str2func(update), params, 'replatoms', replatoms);
     errmin(i,j) = min(errs);
   end
 end

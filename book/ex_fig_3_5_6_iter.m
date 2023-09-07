@@ -30,7 +30,7 @@ ssidx = [2 5];          % sparisty levels to use for the current plot
 % Dictionary update routines
 updates = {'MOD', 'sgk', 'ksvd', 'aksvd', 'nsgk', 'paksvd', 'pnsgk'};
 % Unused atoms replacement strategy
-replatom = 'random';
+replatoms = 'random';
 
 % Data output
 datadir = 'data\';   %racheta

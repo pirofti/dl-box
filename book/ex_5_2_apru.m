@@ -25,7 +25,7 @@ lambda = 0.00024;  % trade-off parameter for 1-norm penalty
 iters = 50;        % number of DL iterations
 
 update = 'aksvd';    % dictionary update method
-replatom = 'random'; % atom replacement strategy
+replatoms = 'random'; % atom replacement strategy
 
 type = 'sliding';        % patches can be superposed
 imdir = [pwd '\img\'];   % image directory
@@ -37,7 +37,7 @@ images = {'lena.png', 'barbara.png', 'peppers.png'};   % images
 
 % AK-SVD
 params = {};
-[D1, X1, errs1] = DL(Y, D0, s, iters, str2func(update), params, 'replatom', replatom);
+[D1, X1, errs1] = DL(Y, D0, s, iters, str2func(update), params, 'replatoms', replatoms);
 fprintf('AK-SVD RMSE: %f\n', min(errs1))
 
 % APrU

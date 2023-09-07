@@ -30,7 +30,7 @@ nnidx = [1 4];          % dict sizes to use for the current plot
 % Dictionary update routines
 updates = {'aksvd', 'nsgk', 'pnsgk'};
 % Unused atoms replacement strategy
-replatom = 'random';
+replatoms = 'random';
 
 % Data output
 datadir = 'data\';
@@ -59,7 +59,7 @@ for i = 1:methods
     fprintf('%s ', updates{i});
 end
 fprintf('\n\tParameters: m=%d N=%d K=%d rounds=%d replatoms=%s', ...
-    m, N, K, rounds, replatom);
+    m, N, K, rounds, replatoms);
 
 for i = nnidx
     n = nn(i);
@@ -84,7 +84,7 @@ for s = ss
             time_start = clock;
             [Dall(r,j,:,:), Xall(r,j,:,:), errs(r,j,:)] = ...
                 DL(Yr, D0r, s, K, str2func(updates{j}), ...
-                'replatom', replatom, 'spfunc', @laols, 'spopts', Lahead);
+                'replatoms', replatoms, 'spfunc', @laols, 'spopts', Lahead);
             time_end = clock;
             times(r,j) = etime(time_end,time_start);  
         end
@@ -92,7 +92,7 @@ for s = ss
     %% Write out data
     matfile = sprintf('%s%s-m%d-n%d-N%d-s%d-K%d-%s.mat', ...
          datadir, dataprefix, m, n, N, s, K, timestamp);    
-    save(matfile,'updates', 'replatom', 'm', 'n', 'N', 's', 'K', ...
+    save(matfile,'updates', 'replatoms', 'm', 'n', 'N', 's', 'K', ...
         'Dall', 'Xall', 'errs', 'criteria','times');
 end % sparsity loop
 end % atoms loop

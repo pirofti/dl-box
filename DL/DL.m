@@ -85,6 +85,8 @@ function [Dout, Xout, err, errextra, shared] = ...
     end
     
     [Y, D, X] = DL_init(Y, D, s, iternum, res.initopts);
+    Dout = D;
+    Xout = X;
 
     for iter = 1:iternum
         if strcmp(func2str(res.spfunc), 'NOP') == 0

@@ -67,9 +67,9 @@ fprintf('\n\tParameters: m=%d N=%d K=%d rounds=%d', ...
 for i = 1:length(nn)
     n = nn(i);
 for k = 1:length(repl)
-    replatom = repl{k};
+    replatoms = repl{k};
     postopts = extra{k};
-    fprintf('\n(n=%d,repl=%s): ', n, replatom);
+    fprintf('\n(n=%d,repl=%s): ', n, replatoms);
     Dall = zeros(rounds,methods, m, n);
     Xall = zeros(rounds,methods, n, N);
     errs = zeros(rounds,methods, K);
@@ -88,15 +88,15 @@ for k = 1:length(repl)
             time_start = clock;
             [Dall(r,j,:,:), Xall(r,j,:,:), errs(r,j,:)] = ...
                 DL(Yr, D0r, s, K, str2func(updates{j}), ...
-                'replatom', replatom, 'postopts', postopts);
+                'replatoms', replatoms, 'postopts', postopts);
             time_end = clock;
             times(r,j) = etime(time_end,time_start);  
         end
     end
     %% Write out data
     matfile = sprintf('%s%s-m%d-n%d-N%d-s%d-K%d-%s-%s.mat', ...
-         datadir, dataprefix, m, n, N, s, K, replatom, timestamp);    
-    save(matfile,'updates', 'replatom', 'm', 'n', 'N', 's', 'K', ...
+         datadir, dataprefix, m, n, N, s, K, replatoms, timestamp);    
+    save(matfile,'updates', 'replatoms', 'm', 'n', 'N', 's', 'K', ...
         'Dall', 'Xall', 'errs', 'criteria','times');
 end % repl loop
 end % atoms loop

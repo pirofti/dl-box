@@ -32,7 +32,7 @@ ots = '20170818164513'; % else use data timestamp
 % Dictionary update routines
 updates = {'ksvd', 'ksvd_reg', 'aksvd', 'aksvd_reg', 'simco', 'simco_reg'};
 % Unused atoms replacement strategy
-replatom = 'no';
+replatoms = 'no';
 %%-------------------------------------------------------------------------
 datadir = 'data\';
 dataprefix = 'tab_4_1_reg';
@@ -78,7 +78,7 @@ for s = ss
         for j = 1:methods
             [Dall(r,j,:,:), Xall(r,j,:,:), errs(r,j,:), criteria(r,j,:)] = ...
                 DL(Yr, D0r, s, iters, str2func(updates{j}), params, ...
-                'replatom', replatom, 'erropts', erropts);
+                'replatoms', replatoms, 'erropts', erropts);
         end
     end
     %% Write out data

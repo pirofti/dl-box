@@ -12,7 +12,7 @@
 % ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 % OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-function [X, shared] = ols(Y,D,s,shared,varargin)
+function [X, shared] = ools(Y,D,s,shared,varargin)
 %% Orthogonal Least Squares (or Optimized Orthogonal Matching Pursuit)
 % INPUTS:
 %   Y -- training signals set

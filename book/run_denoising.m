@@ -21,7 +21,7 @@ s = 6;                  % sparsity
 N = 40000;              % total number of patches
 n = 256;                % dictionary size
 iters = 50;             % DL iterations
-replatom = 'worst';    % replace unused atoms
+replatoms = 'worst';    % replace unused atoms
 stds = [5 10 20 30 50]; % noise standard deviation
 %%-------------------------------------------------------------------------
 updates = {'MOD', 'sgk', 'ksvd', 'aksvd', 'nsgk', 'paksvd', 'pnsgk'};
@@ -101,7 +101,7 @@ function do_img(img, sigma)
         fprintf('%s', updates{i}(1));
         [Dall{i}, Xtrainall{i}, errsall(i,:)] = ...
             DL(Ynoisy(:,randperm(size(Ynoisy,2), N)), D0, s, iters, ...
-            str2func(updates{i}), 'replatom', replatom);
+            str2func(updates{i}), 'replatoms', replatoms);
     end
     for i = 1:size(methods,1)
         do_denoise(m(i).name, m(i).func, Dall{m(i).dict}, i);

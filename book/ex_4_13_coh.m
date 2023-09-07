@@ -27,7 +27,7 @@ iters = 100;    % number of DL iterations
 snr = 20;       % signal-to-noise ratio in dB
 
 update = 'aksvd_coh';    % dictionary update method
-replatom = 'random';     % atom replacement strategy
+replatoms = 'random';     % atom replacement strategy
 
 %%-------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ for i = 1 : length(gamma_v)
   
   [Dcoh{i}, X, errs{i}, criteria{i}] = ...
       DL(Y, D, s, iters, str2func(update), params, ...
-         'replatom', replatom, 'erropts', erropts);
+         'replatoms', replatom, 'erropts', erropts);
 end
 
 % Plot inner atom products in absolute value

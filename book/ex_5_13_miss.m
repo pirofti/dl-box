@@ -38,7 +38,7 @@ fprintf('Ratio of available data: %.4f\n', sum(sum(Ymask))/m/N)
 %%-------------------------------------------------------------------
 % AK-SVD on full data
 
-[Df, Xf, errsf] = DL(Y, D0, s, iters, str2func('aksvd'), {}, 'replatom', 'random');
+[Df, Xf, errsf] = DL(Y, D0, s, iters, str2func('aksvd'), {}, 'replatoms', 'random');
 
 %%-------------------------------------------------------------------
 % AK-SVD on incomplete data

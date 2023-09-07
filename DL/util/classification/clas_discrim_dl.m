@@ -37,7 +37,7 @@ Ye = [Y; sqrt(alpha)*H];    % extended signal matrix
 iters = 50;                 % number of iterations in DL algorithm
 iterc = 20;                 % number of iterations for training initial dictionary
 update = 'aksvd';           % dictionary update method
-replatom = 'random';        % atom replacement strategy
+replatoms = 'random';       % atom replacement strategy
 params = {};
 m = size(Y,1);              % signal length
 c = size(H,1);              % number of classes
@@ -53,7 +53,7 @@ switch init_method
     %D0c = randn(m,n);
     D0c = Y(:,1:n);
     D0c = normc(D0c);
-    D0(1:m,:) = DL(Y, D0c, s, iterc, str2func(update), params, 'replatom', replatom);
+    D0(1:m,:) = DL(Y, D0c, s, iterc, str2func(update), params, 'replatoms', replatoms);
     X = omp(Y, D0(1:m,:), s);
     gamma = 1e-3;
     W = H*X' / (X*X' + gamma*eye(n));     % compute initial classifier
@@ -61,7 +61,7 @@ switch init_method
     D0 = normc(D0);
 end
 
-De = DL(Ye, D0, s, iters, str2func(update), params, 'replatom', replatom);
+De = DL(Ye, D0, s, iters, str2func(update), params, 'replatoms', replatoms);
 
 % Extract dictionary and classifier matrix
 D = De(1:m,:);

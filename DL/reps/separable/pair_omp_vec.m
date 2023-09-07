@@ -1,4 +1,4 @@
-% Copyright (c) 2018 Paul Irofti <paul@irofti.net>
+% Copyright (c) 2020 Paul Irofti <paul@irofti.net>
 % 
 % Permission to use, copy, modify, and/or distribute this software for any
 % purpose with or without fee is hereby granted, provided that the above
@@ -12,24 +12,23 @@
 % ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 % OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-function [success, X, estimate, truth] = classification(Y, H, D, W, s)
-%% Perform classification and return successfulness in percentage
+function [X,shared] = pair_omp_vec(Y,D,s,shared,varargin)
+%% 2D Orthogonal Matching Pursuit algorithm (for separable dictionaries)
 % INPUTS:
-%   Y -- test signals set
-%   H -- ground truth label matrix
-%   D -- dictionary
-%   W -- classifier matrix
-%   s -- sparsity level
+%   Y -- training signals set
+%   D -- current dictionary
+%   s -- sparsity constraint
+% PARAMETERS:
+%   error -- switch to error driven OMP
+%   max_s -- maximum allowed density for error OMP
 %
 % OUTPUTS:
-%   success -- succesful classification percentage
-%   X       -- sparse representations
-%   estimate-- predicted labels
-%   truth   -- ground truth labels (vectorized H)
-
-X = omp(Y,D,s);          % sparse representation
-[~,estimate] = max(W*X); % classification
-[~, truth] = max(H);     % ground truth
-
-% Succesful classification percentage
-success = sum(estimate == truth)*100/length(truth);
+%   X -- sparse representations
+    [p1, p2, N] = size(Y);
+    n1 = size(D{1}, 2);
+    n2 = size(D{2}, 1);
+    Yv = reshape(Y, p1*p2, N);
+    Dv = kron(D{2}',D{1});
+    Xv = omp(Yv, Dv, s, shared, varargin{:});
+    X = reshape(Xv, n1, n2, N);
+end

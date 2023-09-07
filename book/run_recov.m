@@ -26,7 +26,7 @@ rounds = 10;            % test rounds
 % Dictionary update routines
 updates = {'MOD', 'sgk', 'ksvd', 'aksvd', 'nsgk', 'paksvd', 'pnsgk'};
 % Unused atoms replacement strategy
-replatom = 'random';
+replatoms = 'random';
 
 % Data output
 datadir = 'data\';   %racheta
@@ -67,7 +67,7 @@ for i = 1:methods
     fprintf('%s ', updates{i});
 end
 fprintf('\n\tParameters: m=%d N=%d K=%d rounds=%d replatoms=%s', ...
-    m, N, K, rounds, replatom);
+    m, N, K, rounds, replatoms);
 
 for i = 1:length(nn)
     n = nn(i);
@@ -98,7 +98,7 @@ for k = 1:nsnrs
             time_start = clock;
             [Dall(r,up,:,:), Xall(r,up,:,:), errs(r,up,:), recov(r,up,:)] = ...
                 DL(Yr, D0r, s, K, str2func(updates{up}), ...
-                'replatom', replatom, 'erropts', erropts);
+                'replatoms', replatoms, 'erropts', erropts);
             time_end = clock;
             times(r,up) = etime(time_end,time_start);
         end
@@ -106,7 +106,7 @@ for k = 1:nsnrs
     %% Write out data
     matfile = sprintf('%s%s-m%d-n%d-N%d-s%d-K%d-snr%d-%s.mat', ...
          datadir, dataprefix, m, n, N, s, K, isnr, timestamp);    
-    save(matfile,'updates', 'replatom', 'm', 'n', 'N', 's', 'K', ...
+    save(matfile,'updates', 'replatoms', 'm', 'n', 'N', 's', 'K', ...
         'Dall', 'Xall', 'errs', 'recov', 'times');
 end % snr loop
 end % sparsity loop

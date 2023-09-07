@@ -30,7 +30,7 @@ Nv = sum(H,1);              % number of signals in each class
 
 iters = 50;                 % number of iterations in DL algorithm
 update = 'aksvd';           % dictionary update method
-replatom = 'random';        % atom replacement strategy
+replatoms = 'random';        % atom replacement strategy
 params = {};
 
 % Train a dictionary for each class
@@ -39,6 +39,6 @@ for i = 1:c
   is = find(H(i,:));        % indices of signals for the current class
   D0 = randn(m,nv(i));      % initial dictionary
   D0 = normc(D0);
-  [Di, X, errs] = DL(Y(:,is), D0, s, iters, str2func(update), params, 'replatom', replatom);
+  [Di, X, errs] = DL(Y(:,is), D0, s, iters, str2func(update), params, 'replatoms', replatoms);
   D = [D Di];
 end
